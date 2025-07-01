@@ -10,10 +10,38 @@ try:
 except ImportError:
     pass
 
+# Shots generator
+def generate_shots(no_shots):
+    # Load the generated prompts DataFrame
+    prompts_df_ans_fs = pd.read_csv('prompts_df_ans_fs.csv')
+
+    # Convert label column to string (optional, depends on usage)
+    prompts_df_ans_fs['Fake Flag'] = prompts_df_ans_fs['Fake Flag'].astype(str)
+
+    # Number of examples per class
+    num_per_class = no_shots//2
+
+    # Get balanced samples
+    real_samples = prompts_df_ans_fs[prompts_df_ans_fs['Fake Flag'] == '0'].iloc[:num_per_class]
+    fake_samples = prompts_df_ans_fs[prompts_df_ans_fs['Fake Flag'] == '1'].iloc[:num_per_class]
+
+    # Combine and shuffle (optional)
+    balanced_samples = pd.concat([real_samples, fake_samples])
+    balanced_samples = balanced_samples.sample(frac=1, random_state=42)
+
+    # Extract prompt strings and join them
+    shots = '\n'.join(balanced_samples['Prompt'].astype(str))
+
+    # Print or save
+    return shots
+
 # Prompt builder
-def build_prompt(sentence, template=None):
+def build_prompt(sentence, template=None, no_shots=0):
     if template:
-        return template.format(sentence=sentence)
+        if no_shots:
+            return template.format(sentence=sentence, shots=generate_shots(no_shots)) # few-shots
+        return template.format(sentence=sentence) # COT
+    # zero-shot
     return f"""You are a fake news classifier. Given a news headline, output only the classification result:
 
 - Output **0** if the news is **real**
@@ -79,14 +107,14 @@ def get_completion(params, prompt):
         raise ValueError("Unsupported provider")
 
 # Metrics
-def calculate_metrics(df, params, template=None):
+def calculate_metrics(df, params, template=None, no_shots=0):
     true_labels, predicted_labels = [], []
 
     for index, row in df.iterrows():
         sentence = re.sub(r'[\W_]+', ' ', row['claim_s'])
         actual = row['fake_flag']
-        prompt = build_prompt(sentence, template=template)
-
+        prompt = build_prompt(sentence, template=template, no_shots=no_shots)
+        print(prompt)
         try:
             output = get_completion(params, prompt)
             cleaned = re.sub(r"[^01]", "", output)
@@ -117,6 +145,7 @@ if __name__ == "__main__":
     parser.add_argument("--input", type=str, default="test.csv", help="CSV file with 'claim_s' and 'fake_flag' columns")
     parser.add_argument("--output", type=str, default="predictions_with_labels.csv", help="Output CSV file with predictions")
     parser.add_argument("--prompt", type=str, default=None, help="Path to a text file containing the prompt template. Use {sentence} as placeholder.")
+    parser.add_argument("--no_shots", type=str, default=0, choices=[0, 2, 4, 8, 16, 32], help="Number of examples to be used" )
     args = parser.parse_args()
 
     df = pd.read_csv(args.input)
@@ -131,7 +160,7 @@ if __name__ == "__main__":
         "model": args.model
     }
 
-    acc, prec, rec, f1, preds = calculate_metrics(df, params, template=prompt_template)
+    acc, prec, rec, f1, preds = calculate_metrics(df, params, template=prompt_template, no_shots=args.no_shots)
 
     print("\n--- Classification Report ---")
     print(f"Accuracy : {round(acc, 3)}")
