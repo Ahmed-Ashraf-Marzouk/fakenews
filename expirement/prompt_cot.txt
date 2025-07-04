@@ -1,0 +1,11 @@
+The output of this prompt must be of length 1 with two possible values 0 or 1:
+    Analyze the following statement to determine its authenticity by considering these steps:
+    1. Content Verification: Check if the claims made in the content can be independently verified with other credible information available.
+    2. Logical Consistency: Assess whether the statement is logically consistent and whether it contains contradictions or implausible assertions.
+    After carefully considering these points, given a news headline, output only the classification result:
+        - Output **0** if the news is **real**
+        - Output **1** if the news is **fake**
+        - Output must be **one digit only (0 or 1)**, no explanation or symbols.
+    Now classify the following:
+    Text: {sentence}
+    Answer:

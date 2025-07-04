@@ -1,0 +1,13 @@
+You are a fake news classifier. Given a news headline, output only the classification result:
+    - Output **0** if the news is **real**
+    - Output **1** if the news is **fake**
+    - Output must be **one digit only (0 or 1)**, no explanation or symbols.
+
+    Examples:
+
+    {shots}
+
+    Now classify the following:
+
+    Text: {sentence}
+    Answer:
