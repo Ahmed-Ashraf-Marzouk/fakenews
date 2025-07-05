@@ -177,7 +177,7 @@ if __name__ == "__main__":
     if args.output is None:
         model_name = args.model.replace(":", "_")
         os.makedirs(f'./predictions/{args.provider}_{model_name}/{args.task}', exist_ok=True)
-        args.output = f"./predictions/{args.task}/pred_s{args.no_shots}{'_cot' if args.prompt == 'prompt_cot.txt' else ''}.csv"
+        args.output = f"./predictions/{args.provider}_{model_name}/{args.task}/pred_s{args.no_shots}{'_cot' if args.prompt == 'prompt_cot.txt' else ''}.csv"
     df["Predicted"] = preds
     df.to_csv(args.output, index=False)
 
