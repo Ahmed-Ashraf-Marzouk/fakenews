@@ -175,7 +175,7 @@ if __name__ == "__main__":
     print(f"F1 Score : {round(f1, 3)}")
 
     if args.output is None:
-        os.makedirs(f'./predictions/{args.task}', exist_ok=True)
+        os.makedirs(f'./predictions/{args.provider}_{args.model}/{args.task}', exist_ok=True)
         args.output = f"./predictions/{args.task}/pred_s{args.no_shots}{'_cot' if args.prompt == 'prompt_cot.txt' else ''}.csv"
     df["Predicted"] = preds
     df.to_csv(args.output, index=False)
