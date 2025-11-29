@@ -1,1 +1,8 @@
-
+pandas
+torch
+scikit-learn
+tqdm
+transformers
+huggingface_hub
+ollama
+openai
