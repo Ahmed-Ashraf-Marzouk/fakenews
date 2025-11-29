@@ -8,6 +8,9 @@ This repository contains the code and experimental setup for our research evalua
 
 The rise of online misinformation presents a significant challenge, especially in **low-resource languages** like Arabic. This project explores how modern LLMs perform on the task of classifying Arabic fake news.
 
+<img width="2223" height="904" alt="Final Figure V1" src="https://github.com/user-attachments/assets/43454f53-1d1c-4850-95be-97cc0735b340" />
+
+
 We evaluate several prominent models, including:
 
 * Allam
