@@ -51,11 +51,12 @@ These trends demonstrate that **advanced Arabic LLMs and multilingual—still st
 ```
 .
 ├── expirement/
-│   ├── run.py                # Main evaluation script
-│   ├── prompts/              # Prompt templates (zero-shot, few-shot, CoT)
-│   ├── predictions/          # Saved predictions from experiments
-│   ├── datasets/             # ANS and ArAiEval datasets
-│   └── utils/                # Helper modules
+│   ├── fake_news.py          
+│   ├── prompt_cot.txt            
+|   ├── prompt_shots.txt
+|   ├── requirements.txt 
+│   ├── script.bash         
+│   └── datasets/               
 └── README.md
 ```
 
